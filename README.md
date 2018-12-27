@@ -3,19 +3,22 @@ Simple Android Utilities ANE for Adobe AIR.
 This is my first ANE, so is a work in progress.
 
 - Include the extension in you app descriptor:
+```
 <extensions>
   <extensionID>roipeker.AndroidUtilsAne</extensionID>
 </extensions>
+```
 
-- Include the AndroidUtilsAne.ane as a library in your sourcepath.
+- Include **AndroidUtilsAne.ane** as a library in your sourcepath.
 
 Has a default implementation so it can be compiled in any AIR platform without compilation exceptions.
 
-Make a call to AndroidUtilsAne.init() before any other method call to initialize it.
+Make a call to `AndroidUtilsAne.init()` before any other method call to initialize it.
 Most API calls that require colors, expect them in 24bits (ARGB)
 
-ANEs API:
+**API:**
 
+```
 AndroidUtilsAne.init();
 AndroidUtilsAne.isSupported ;
 AndroidUtilsAne.setTaskbar( "App taskbar name!", 0xffff0000, new BitmapData(32,32,0xff0000, false));
@@ -53,3 +56,4 @@ AndroidUtilsAne.getStatusbarHeight();
 
 // in px, return 0 if the device doesn't have a navbar.
 AndroidUtilsAne.getNavigationbarHeight();
+```
