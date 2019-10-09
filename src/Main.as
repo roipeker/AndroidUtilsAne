@@ -22,6 +22,10 @@ public class Main extends Sprite {
         stage.displayState = StageDisplayState.NORMAL;
 
         loaderInfo.addEventListener(Event.COMPLETE, init);
+
+// 433 / 160dpi = 2,70625 scale factor.
+// 1620x1080 = 540x360
+// statusbar height = 25dp * 3 = 75px
     }
 
     private var box1:Shape;
@@ -29,7 +33,163 @@ public class Main extends Sprite {
     private var statusbarLine:Shape;
 
     private function init(event:Event):void {
+//        test1();
+        test2();
+    }
 
+    private function test2():void {
+
+        box1 = createDot(0x00ff00);
+        box2 = createDot(0x0000ff);
+
+        stage.addEventListener(Event.RESIZE, onStageResize);
+
+        stage.displayState = StageDisplayState.NORMAL;
+        AndroidUtilsAne.init();
+        stage.color = 0x7777777;
+        remder();
+        return ;
+        /*AndroidUtilsAne.setUIVisibility(
+                SystemUIFlags.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | SystemUIFlags.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | SystemUIFlags.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | SystemUIFlags.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                | SystemUIFlags.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        );*/
+
+        /*AndroidUtilsAne.setWindowFlags(
+                WindowFlags.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+                |WindowFlags.FLAG_LAYOUT_NO_LIMITS
+        );*/
+
+        /* AndroidUtilsAne.statusbarColorTransparent();
+         AndroidUtilsAne.navigationbarColorTransparent();
+         /!*AndroidUtilsAne.setWindowFlags(
+                 WindowFlags.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+                 |WindowFlags.FLAG_LAYOUT_NO_LIMITS
+         );*!/
+         AndroidUtilsAne.systemUISetFlags(
+ //                SystemUIFlags.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+
+                 SystemUIFlags.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                 |SystemUIFlags.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                 | SystemUIFlags.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+
+                 | SystemUIFlags.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                 | SystemUIFlags.SYSTEM_UI_FLAG_FULLSCREEN
+         );
+ */
+
+        // @required for any modification.
+        /*AndroidUtilsAne.setWindowFlags(
+                WindowFlags.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+        );*/
+
+        // required to make the Activity render at 100% the screen size.
+        // sadly you can't hide statusbar for good like this in Android <= 28
+        AndroidUtilsAne.statusbarColorTransparent();
+        AndroidUtilsAne.navigationbarColorTransparent();
+
+        // use bitwise methods for simplicity to toggle flags:
+        // systemUISetFlags, systemUIRemoveFlags, systemUIHasFlags
+        AndroidUtilsAne.systemUISetFlags(
+                SystemUIFlags.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | SystemUIFlags.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                // keeps the Fash UI coordinates behind navbar space.
+                | SystemUIFlags.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | SystemUIFlags.STATUS_BAR_HIDDEN // same porpouse
+                | SystemUIFlags.SYSTEM_UI_FLAG_LOW_PROFILE
+
+                // emulate fullscreen.
+                | SystemUIFlags.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+
+                // swipe up to open nav, closes automatically
+                | SystemUIFlags.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        );
+        // "LightStyle" means light background, black ui/text, so is the opposite of what you might expect.
+        AndroidUtilsAne.statusbarDarkStyle();
+
+        // hack to avoid the statusbar from losing for good the "LOW PROFILE" state when users swipes down.
+        checkStatusbar();
+
+        function checkStatusbar() {
+            AndroidUtilsAne.systemUISetFlags(SystemUIFlags.STATUS_BAR_HIDDEN);
+            setTimeout(checkStatusbar, 2000);
+        }
+
+//        stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+
+
+        /*if( AndroidUtilsAne.getStatusbarHeight() / Capabilities.screenDPI/160 < 25 ) {
+            // notch.
+        } else {
+            // no notch.
+        }*/
+
+
+//        stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+        /*AndroidUtilsAne.systemUISetFlags(
+                SystemUIFlags.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                |SystemUIFlags.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | SystemUIFlags.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                | SystemUIFlags.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | SystemUIFlags.SYSTEM_UI_FLAG_FULLSCREEN
+        );*/
+
+
+        /*View.SYSTEM_UI_FLAG_IMMERSIVE
+        // Set the content to appear under the system bars so that the
+        // content doesn't resize when the system bars hide and show.
+        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        // Hide the nav bar and status bar
+        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        | View.SYSTEM_UI_FLAG_FULLSCREEN);*/
+
+    }
+
+    private function remder():void {
+
+        // do not allow AIR to manage the stage display state... we will do it natively.
+        //(also use normal on the certificate xml)
+        stage.displayState = StageDisplayState.NORMAL;
+
+        AndroidUtilsAne.init();
+
+        // required to make the Activity render at 100% the screen size.
+        // sadly you can't hide statusbar for good like this (at least in Android.Oreo )
+        AndroidUtilsAne.statusbarColorTransparent();
+        AndroidUtilsAne.navigationbarColorTransparent();
+
+        // use bitwise methods for simplicity to toggle flags:
+        // systemUISetFlags, systemUIRemoveFlags, systemUIHasFlags
+        AndroidUtilsAne.systemUISetFlags(
+                // keeps the Fash UI coordinates behind navbar space.
+                SystemUIFlags.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+
+                // DIM the statusbar text
+                | SystemUIFlags.STATUS_BAR_HIDDEN // same porpouse as SystemUIFlags.SYSTEM_UI_FLAG_LOW_PROFILE
+
+                // emulate fullscreen hidding navbar
+                | SystemUIFlags.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+
+                // swipe up to open nav, closes automatically
+                | SystemUIFlags.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        );
+        // "LightStyle" means light background, black ui/text, so is the opposite of what you might expect.
+        AndroidUtilsAne.statusbarDarkStyle();
+
+        // hack to avoid the statusbar from losing for good the "LOW PROFILE" state when users swipes down.
+        checkStatusbar();
+
+        function checkStatusbar():void {
+            AndroidUtilsAne.systemUISetFlags(SystemUIFlags.STATUS_BAR_HIDDEN);
+            setTimeout(checkStatusbar, 2000);
+        }
+    }
+
+    private function test1():void {
         statusbarLine = new Shape();
         addChild(statusbarLine);
 
@@ -91,11 +251,14 @@ public class Main extends Sprite {
         box2.y = stage.stageHeight - box2.height - 5;
 
         // draw line.
-        statusbarLine.graphics.clear();
-        statusbarLine.graphics.beginFill(0x00ff00);
-        statusbarLine.graphics.drawRect(0, 0, stage.stageWidth, 3);
-        statusbarLine.graphics.endFill();
-        statusbarLine.y = AndroidUtilsAne.getStatusbarHeight();
+        if (statusbarLine) {
+            statusbarLine.graphics.clear();
+            statusbarLine.graphics.beginFill(0x00ff00);
+            statusbarLine.graphics.drawRect(0, 0, stage.stageWidth, 3);
+            statusbarLine.graphics.endFill();
+            statusbarLine.y = AndroidUtilsAne.getStatusbarHeight();
+        }
+
     }
 
     private function testBrightness():void {
